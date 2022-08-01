@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block links %}
+	<link href="{{ asset('css/login.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+	<main class="form-signin text-center">
+		<form action="{{ path('app_login') }}" method='post'>
+			<i class="mb-4 bi bi-calendar3 display-5 text-primary"></i>
+			<div class="mb-5 fw-normal">
+				<h1 class="h3">{{ 'Welcome to Agenda'|trans }}</h1>
+				<span class="h5 fw-bold text-secondary">{{'by'|trans ~ ' Asmitta-01' }}</span>
+				<hr class="w-50 my-2 mx-auto">
+				<h1 class="h4">{{ 'Login to manage your agenda'|trans }}</h1>
+			</div>
+
+			<div class="form-floating">
+				<input type="email" class="form-control" id="floatingInput" value="{{ last_username }}" required name="_username">
+				<label for="floatingInput">{{ 'Email address'|trans }}</label>
+			</div>
+			<div class="form-floating">
+				<input type="password" class="form-control" id="floatingPassword" required name="_password">
+				<label for="floatingPassword">{{ 'Password'|trans }}</label>
+			</div>
+
+			{% if error %}
+				<div class="badge text-bg-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+			{% endif %}
+
+			<div class="mb-3 small">
+				{{ "You don't have an account ?"|trans }}
+				<a class="link-primary text-decoration-none" href="{{ path('app_register') }}">{{ 'Sign up'|trans }}</a>
+			</div>
+
+			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+			<button class="w-100 mt-2 btn btn-lg btn-primary" type="submit">{{ 'Sign in'|trans }}</button>
+			<p class="mt-5 mb-3 text-muted">&copy; 2022</p>
+		</form>
+	</main>
+{% endblock %}
