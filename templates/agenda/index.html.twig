@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block links %}
-	<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.css" integrity="sha256-jLWPhwkAHq1rpueZOKALBno3eKP3m4IMB131kGhAlRQ=" crossorigin="anonymous">
 {% endblock %}
 
 {% block body %}
@@ -13,65 +13,70 @@
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
 		{% endfor %}
-		<div class="row pt-3">
-			<div class="col col-md-9">
-				<div class="w-100">
-					<h1 class="border-bottom border-primary pb-2 mb-3">Agenda</h1>
-				</div>
-				<div class="ftco-section">
-					<div class="elegant-calencar d-md-flex">
-						<div class="wrap-header d-flex align-items-center img" style="background-image: url({{ asset('image/bg.jpg') }});">
-							<p id="reset">{{ 'Today'|trans }}</p>
-							<div id="header" class="p-0">
-								<div class="pre-button d-flex align-items-center justify-content-center">
-									<i class="bi bi-chevron-left"></i>
-								</div>
-								<div class="head-info">
-									<div class="head-month"></div>
-									<div class="head-day"></div>
-								</div>
-								<div class="next-button d-flex align-items-center justify-content-center">
-									<i class="bi bi-chevron-right"></i>
-								</div>
-							</div>
-						</div>
-						<div class="calendar-wrap">
-							<div class="w-100 button-wrap">
-								<div class="pre-button d-flex align-items-center justify-content-center">
-									<i class="bi bi-chevron-left"></i>
-								</div>
-								<div class="next-button d-flex align-items-center justify-content-center">
-									<i class="bi bi-chevron-right"></i>
-								</div>
-							</div>
-							<table id="calendar">
-								<thead>
-									<tr>
-										{% for var in 2..8 %}
-											<th>{{ date('2003-02-' ~ var)|date('D') }}</th>
-										{% endfor %}
-									</tr>
-								</thead>
-								<tbody>
-									{% for j in 1..6 %}
-										<tr>
-											{% for i in 1..7 %}
-												<td></td>
-											{% endfor %}
-										</tr>
-									{% endfor %}
-								</tbody>
-							</table>
-						</div>
+		<div class="row">
+			<div class="col col-md-9 mt-md-3 border-end border-2">
+				<div class="d-flex border-bottom border-primary align-items-baseline">
+					<h1 class="pb-2 mb-3">{{ 'Calendar'|trans }}</h1>
+					<div class="ms-auto">
+						<button type="button" class="btn btn-sm btn-outline-primary">
+							<span class="d-none d-lg-inline">{{ 'Day view'|trans }}</span>
+							<i class="bi bi-calendar-day"></i>
+						</button>
+						<button type="button" class="btn btn-sm btn-outline-primary">
+							<span class="d-none d-lg-inline">{{ 'Week view'|trans }}</span>
+							<i class="bi bi-calendar-week"></i>
+						</button>
+						<button type="button" class="btn btn-sm btn-primary">
+							<span class="d-none d-lg-inline">{{ 'Month view'|trans }}</span>
+							<i class="bi bi-calendar-month"></i>
+						</button>
 					</div>
 				</div>
+				<div class="d-flex flex-column pt-3">
+					<div id="calendar"></div>
+				</div>
 			</div>
-			<div class="col col-md-3">
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. quos eaque tempore sequi libero, tenetur dolor quis odit distinctio laborum illum placeat voluptatibus at id non perferendis iusto et recusandae numquam ipsa? Ab facilis obcaecati laborum eligendi ratione cupiditate amet? Culpa voluptatibus unde reiciendis. Totam exercitationem libero tempore, impedit asperiores officiis deserunt est blanditiis neque molestiae maxime eum quam ea quidem voluptatum cupiditate fugiat illo velit soluta! Voluptatum incidunt aperiam quo magnam accusantium omnis eos minima ipsam, quae error repellendus ex sunt molestiae dolore aliquid rem, laudantium ducimus sapiente eum ad iure quasi aut? Fuga praesentium eum ipsum aspernatur debitis quis incidunt facilis, in ex, saepe, nam harum accusamus unde vero
+			<div class="col col-md-3 mt-md-3 px-0 bg-primary bg-opacity-25">
+				<div class="d-flex text-dark px-2 bg-white border-bottom border-primary align-items-baseline">
+					<h1 class="pb-2 mb-3">{{ 'Events'|trans }}</h1>
+					<button type="button" class="ms-auto btn btn-sm btn-outline-primary" data-bs-toggle="offcanvas" data-bs-target="#eventForm" aria-controls="eventForm">
+						{{ 'New event'|trans }}
+						<i class="bi bi-calendar2-plus"></i>
+					</button>
+				</div>
+				<div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="eventForm" aria-labelledby="eventLabel">
+					<div class="offcanvas-header">
+						<h5 class="offcanvas-title" id="eventLabel">{{ 'Add new event'|trans }}</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+					</div>
+					<div class="offcanvas-body">
+						<div class="small">
+							{% form_theme eventForm 'bootstrap_5_layout.html.twig' %}
+							{{ form_start(eventForm) }}
+							{{ form_row(eventForm.title) }}
+							{{ form_row(eventForm.description) }}
+							{{ form_row(eventForm.launchedOn) }}
+							{{ form_end(eventForm) }}
+						</div>
+					</div>
+					<div class="px-2 pt-3" id="eventInfo"></div>
+				</div>
 			</div>
 		</div>
 	</div>
 {% endblock %}
+
+
 {% block scripts %}
+	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.js" integrity="sha256-cbWu30RZ0VQ5sBdqcxYa3S3nA+E1d/tkUcflycLQZ50=" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/locales/{{ locale }}.js" integrity="sha256-tA2XdsRejAQMBFRuYc++BwRvojoPiI3N6gadEzNdIno=" crossorigin="anonymous"></script>
 	<script src="{{ asset('js/main.js') }}"></script>
+
+	{% set calendarEvents = [] %}
+	{% for event in events %}
+		{% set calendarEvents = calendarEvents|merge(event.toFullCalendarJsArray()) %}
+	{% endfor %}
+	<script>
+		document.addEventListener('DOMContentLoaded', loadCalendar({{ calendarEvents|json_encode|raw }}));
+	</script>
 {% endblock %}

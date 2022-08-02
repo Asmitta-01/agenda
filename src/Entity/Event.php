@@ -140,4 +140,35 @@ class Event
 
         return $this;
     }
+
+    /**
+     * Return the Entity compatible to FullCalendar Js(https://fullcalendar.io/) plugin's event
+     * 
+     * Each event have one of these:
+     * - id
+     * - groupId
+     * - title [Required]
+     * - start [Required]
+     * - end
+     * - allDay
+     * - className: default(transparent), important(red), chill(pink), success(green), info(blue)
+     * All the properties at https://fullcalendar.io/docs/event-source-object
+     * 
+     */
+    public function toFullCalendarJsArray(): array
+    {
+        if (!$this->title)
+            return [];
+
+        $start = new \DateTime($this->launchedOn->format('Y-m-d') . ' ' . $this->startHour->format('H:i'));
+        $end = $this->duration ? date_add($start, $this->duration) : $start;
+
+        return [
+            'title' => $this->title,
+            'start' => $start->format('Y-m-d'),
+            'end' => $end->format('Y-m-d H:i'),
+            'allDay' => $this->duration ? false : true,
+            'className' => 'chill'
+        ];
+    }
 }

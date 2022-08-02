@@ -1,5 +1,6 @@
+{% set locale = app.request.attributes.get('_locale') %}
 <!DOCTYPE html>
-<html>
+<html lang={{ locale }}>
 	<head>
 		<meta charset="UTF-8">
 		<meta name="author" content="Brayan Tiwa - Asmitta(-01)">
@@ -7,6 +8,7 @@
 		<title>
 			{{ title is defined ? title ~ ' - Agenda by Asmitta-01'|trans : "Welcome on Agenda by Asmitta-01"|trans }}
 		</title>
+
 		<link rel="icon" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/icons/calendar3.svg" type="image/x-icon">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
