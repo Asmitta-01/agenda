@@ -6,23 +6,16 @@
 
 {% block body %}
 	<div class="container-fluid">
-		{% for message in app.flashes('info') %}
-			<div class="alert alert-info alert-dismissible mt-md-3 fade show" role="alert">
-				{{ 'Welcome back'|trans }}
-				<strong>{{ app.user.fisrtName }}</strong>
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>
-		{% endfor %}
 		<div class="row">
 			<div class="col col-md-9 mt-md-3 border-end border-2">
 				<div class="d-flex border-bottom border-primary align-items-baseline">
 					<h1 class="pb-2 mb-3">{{ 'Calendar'|trans }}</h1>
 					<div class="ms-auto">
-						<button type="button" class="btn btn-sm btn-outline-primary">
+						<button type="button" class="btn btn-sm btn-outline-primary" disabled>
 							<span class="d-none d-lg-inline">{{ 'Day view'|trans }}</span>
 							<i class="bi bi-calendar-day"></i>
 						</button>
-						<button type="button" class="btn btn-sm btn-outline-primary">
+						<button type="button" class="btn btn-sm btn-outline-primary" disabled>
 							<span class="d-none d-lg-inline">{{ 'Week view'|trans }}</span>
 							<i class="bi bi-calendar-week"></i>
 						</button>
@@ -36,7 +29,7 @@
 					<div id="calendar"></div>
 				</div>
 			</div>
-			<div class="col col-md-3 mt-md-3 px-0 bg-primary bg-opacity-25">
+			<div class="col col-md-3 mt-md-3 px-0 bg-primary bg-opacity-10">
 				<div class="d-flex text-dark px-2 bg-white border-bottom border-primary align-items-baseline">
 					<h1 class="pb-2 mb-3">{{ 'Events'|trans }}</h1>
 					<button type="button" class="ms-auto btn btn-sm btn-outline-primary" data-bs-toggle="offcanvas" data-bs-target="#eventForm" aria-controls="eventForm">
@@ -53,14 +46,43 @@
 						<div class="small">
 							{% form_theme eventForm 'bootstrap_5_layout.html.twig' %}
 							{{ form_start(eventForm) }}
-							{{ form_row(eventForm.title) }}
-							{{ form_row(eventForm.description) }}
-							{{ form_row(eventForm.launchedOn) }}
 							{{ form_end(eventForm) }}
 						</div>
 					</div>
-					<div class="px-2 pt-3" id="eventInfo"></div>
 				</div>
+				<div class="px-2 pt-3" id="eventInfo">
+					<div id="eventInfo_category" class="px-2 rounded bg-opacity-100"></div>
+					<div id="eventInfo_title" class="h3 py-3 fw-bold"></div>
+					<blockquote id="eventInfo_description" class="blockquote"></blockquote>
+					<p>
+						{{ 'This event begin on the'|trans }}
+						<span id="eventInfo_launchedOn" class="fw-bold"></span>
+						{{ 'at'|trans }}
+						<span id="eventInfo_startHour" class="fw-bold"></span>
+						{{ 'and will last'|trans }}
+						<span id="eventInfo_duration" class="fst-italic"></span>
+						{{ 'hours'|trans }}
+					</p>
+					<div id="eventInfo_repeatedly"></div>
+					<div class="input-group mt-2">
+						<button type="button" class="btn w-50 btn-sm btn-outline-primary" id="editEvent">
+							{{ 'Edit'|trans }}
+							<i class="bi bi-pencil-square"></i>
+						</button>
+						<button type="button" class="btn w-50 btn-sm btn-danger" id="deleteEvent">
+							{{ 'Delete'|trans }}
+							<i class="bi bi-trash"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="toast-container top-0 start-50 translate-middle-x">
+		<div class="toast align-items-center border-0 mt-3" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body"></div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
 		</div>
 	</div>
@@ -74,7 +96,7 @@
 
 	{% set calendarEvents = [] %}
 	{% for event in events %}
-		{% set calendarEvents = calendarEvents|merge(event.toFullCalendarJsArray()) %}
+		{% set calendarEvents = calendarEvents|merge([event.toFullCalendarJsArray()]) %}
 	{% endfor %}
 	<script>
 		document.addEventListener('DOMContentLoaded', loadCalendar({{ calendarEvents|json_encode|raw }}));

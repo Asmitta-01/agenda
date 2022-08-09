@@ -151,24 +151,60 @@ class Event
      * - start [Required]
      * - end
      * - allDay
-     * - className: default(transparent), important(red), chill(pink), success(green), info(blue)
+     * - className
      * All the properties at https://fullcalendar.io/docs/event-source-object
      * 
+     * @param bool $onlyFullCalendarProperties If set to true, the function will return only these previous given properties, otherwise it will return all the Event object properties in an array form
      */
-    public function toFullCalendarJsArray(): array
+    public function toFullCalendarJsArray(bool $onlyFullCalendarProperties = true): array
     {
         if (!$this->title)
             return [];
 
-        $start = new \DateTime($this->launchedOn->format('Y-m-d') . ' ' . $this->startHour->format('H:i'));
-        $end = $this->duration ? date_add($start, $this->duration) : $start;
+        if ($onlyFullCalendarProperties) {
+            switch ($this->category->getName()) {
+                case 'Birthday':
+                    $class = ['text-bg-warning', 'border-warning'];
+                    break;
+                case 'Wedding':
+                    $class = ['text-bg-success', 'border-success'];
+                    break;
+                case 'Meeting':
+                    $class = ['text-bg-info', 'border-info'];
+                    break;
+                case 'Conference':
+                    $class = ['text-bg-primary', 'border-primary'];
+                    break;
+                case 'Other':
+                    $class = ['text-bg-secondary', 'border-secondary'];
+                    break;
+                default:
+                    $class = ['text-bg-dark', 'border-dark'];
+                    break;
+            }
 
-        return [
-            'title' => $this->title,
-            'start' => $start->format('Y-m-d'),
-            'end' => $end->format('Y-m-d H:i'),
-            'allDay' => $this->duration ? false : true,
-            'className' => 'chill'
-        ];
+            $start = new \DateTime($this->launchedOn->format('Y-m-d') . ' ' . $this->startHour->format('H:i'));
+            $end = $this->duration ? date_add($start, $this->duration) : $start;
+
+            $array = [
+                'id' => $this->id,
+                'title' => $this->title,
+                'start' => $start->format('Y-m-d'),
+                'end' => $end->format('Y-m-d H:i'),
+                'allDay' => $this->duration ? false : true,
+                'className' => $class
+            ];
+        } else {
+            $array = [
+                'title' => $this->title,
+                'description' => $this->description,
+                'launchedOn' => $this->launchedOn->format('D d M Y'),
+                'startHour' => $this->startHour->format('H:i'),
+                'duration' => $this->duration ? $this->duration->h : null,
+                'category' => $this->category->getName()
+            ];
+        }
+
+        return $array;
     }
 }
