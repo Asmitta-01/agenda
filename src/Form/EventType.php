@@ -26,7 +26,6 @@ class EventType extends AbstractType
                 'with_days'   => true,
                 'with_hours'  => true
             ])
-            ->add('repeatedly')
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name'

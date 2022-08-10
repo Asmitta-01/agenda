@@ -5,100 +5,114 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col col-md-9 mt-md-3 border-end border-2">
-				<div class="d-flex border-bottom border-primary align-items-baseline">
-					<h1 class="pb-2 mb-3">{{ 'Calendar'|trans }}</h1>
-					<div class="ms-auto">
-						<button type="button" class="btn btn-sm btn-outline-primary" disabled>
-							<span class="d-none d-lg-inline">{{ 'Day view'|trans }}</span>
-							<i class="bi bi-calendar-day"></i>
-						</button>
-						<button type="button" class="btn btn-sm btn-outline-primary" disabled>
-							<span class="d-none d-lg-inline">{{ 'Week view'|trans }}</span>
-							<i class="bi bi-calendar-week"></i>
-						</button>
-						<button type="button" class="btn btn-sm btn-primary">
-							<span class="d-none d-lg-inline">{{ 'Month view'|trans }}</span>
-							<i class="bi bi-calendar-month"></i>
-						</button>
-					</div>
-				</div>
-				<div class="d-flex flex-column pt-3">
-					<div id="calendar"></div>
-				</div>
-			</div>
-			<div class="col col-md-3 mt-md-3 px-0 bg-primary bg-opacity-10">
-				<div class="d-flex text-dark px-2 bg-white border-bottom border-primary align-items-baseline">
-					<h1 class="pb-2 mb-3">{{ 'Events'|trans }}</h1>
-					<button type="button" class="ms-auto btn btn-sm btn-outline-primary" data-bs-toggle="offcanvas" data-bs-target="#eventForm" aria-controls="eventForm">
-						{{ 'New event'|trans }}
-						<i class="bi bi-calendar2-plus"></i>
-					</button>
-				</div>
-				<div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="eventForm" aria-labelledby="eventLabel">
-					<div class="offcanvas-header">
-						<h5 class="offcanvas-title" id="eventLabel">{{ 'Add new event'|trans }}</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-					</div>
-					<div class="offcanvas-body">
-						<div class="small">
-							{% form_theme eventForm 'bootstrap_5_layout.html.twig' %}
-							{{ form_start(eventForm) }}
-							{{ form_end(eventForm) }}
+	<div class="border-bottom w-100 d-flex justify-content-end px-2 py-1" style="font-size: 12px;">
+		<a href="{{ path('app_switch_lang') }}" class=" text-decoration-none link-secondary me-3">
+			<span class="d-none d-lg-inline">{{ locale == 'en' ? 'Switch to French' : 'Passer a l\'Anglais' }}</span>
+			<i class="bi bi-globe"></i>
+		</a>
+		<a href="{{ path('app_logout')}}" class="link-danger text-decoration-none" onclick="return confirm('{{ 'You are going to be logged out. Continue ?'|trans }}')">
+				<span class="d-none d-lg-inline">{{ 'Logout'|trans }}</span>
+				<i class="bi bi-box-arrow-right"></i>
+			</a>
+		</div>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-12 col-md-9 mt-md-3 border-end border-2 mb-3 mb-md-0">
+					<div class="d-flex border-bottom border-primary align-items-baseline">
+						<h1 class="h1 pb-2">{{ 'Calendar'|trans }}</h1>
+						<div class="ms-auto">
+							<button type="button" class="btn btn-sm btn-outline-primary d-none">
+								<span class="d-none d-lg-inline">{{ 'Day view'|trans }}</span>
+								<i class="bi bi-calendar-day"></i>
+							</button>
+							<button type="button" class="btn btn-sm btn-outline-primary d-none">
+								<span class="d-none d-lg-inline">{{ 'Week view'|trans }}</span>
+								<i class="bi bi-calendar-week"></i>
+							</button>
+							<button type="button" class="btn btn-sm btn-primary">
+								<span class="d-none d-lg-inline">{{ 'Month view'|trans }}</span>
+								<i class="bi bi-calendar-month"></i>
+							</button>
 						</div>
 					</div>
+					<div class="d-flex flex-column pt-3">
+						<div id="calendar"></div>
+					</div>
 				</div>
-				<div class="px-2 pt-3" id="eventInfo">
-					<div id="eventInfo_category" class="px-2 rounded bg-opacity-100"></div>
-					<div id="eventInfo_title" class="h3 py-3 fw-bold"></div>
-					<blockquote id="eventInfo_description" class="blockquote"></blockquote>
-					<p>
-						{{ 'This event begin on the'|trans }}
-						<span id="eventInfo_launchedOn" class="fw-bold"></span>
-						{{ 'at'|trans }}
-						<span id="eventInfo_startHour" class="fw-bold"></span>
-						{{ 'and will last'|trans }}
-						<span id="eventInfo_duration" class="fst-italic"></span>
-						{{ 'hours'|trans }}
-					</p>
-					<div id="eventInfo_repeatedly"></div>
-					<div class="input-group mt-2">
-						<button type="button" class="btn w-50 btn-sm btn-outline-primary" id="editEvent">
+				<div class="col col-md-3 mt-md-3 px-0 bg-info bg-opacity-10">
+					<div class="d-flex text-dark px-2 bg-white border-bottom border-primary align-items-baseline">
+						<h1 class="pb-2 me-2">{{ 'Events'|trans }}</h1>
+						<button type="button" class="ms-auto btn btn-sm btn-outline-primary text-truncate" data-bs-toggle="offcanvas" data-bs-target="#eventForm" aria-controls="eventForm">
+							{{ 'New event'|trans }}
+							<i class="bi bi-calendar2-plus"></i>
+						</button>
+					</div>
+					<div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="eventForm" aria-labelledby="eventLabel">
+						<div class="offcanvas-header">
+							<h5 class="offcanvas-title" id="eventLabel">{{ 'Add new event'|trans }}</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+						</div>
+						<div class="offcanvas-body">
+							<div class="small">
+								{% form_theme eventForm 'bootstrap_5_layout.html.twig' %}
+								{{ form_start(eventForm, {'action': path('app_event_new')}) }}
+								{{ form_end(eventForm) }}
+							</div>
+						</div>
+					</div>
+					<div class="px-2 pt-3" id="eventInfo">
+						<span id="eventInfo_id" class="d-none"></span>
+						<div id="eventInfo_category"></div>
+						<div id="eventInfo_className" class="d-none"></div>
+						<div id="eventInfo_title" class="h3 py-2 fw-bold"></div>
+						<hr class="text-secondary d-none evtinfo-p">
+						<blockquote id="eventInfo_description" class="blockquote"></blockquote>
+						<hr class="text-secondary d-none evtinfo-p">
+						<p class="d-none evtinfo-p">
+							{{ 'This event begin on the'|trans }}
+							<span id="eventInfo_launchedOn" class="fw-bold small bg-white px-2 py-1 rounded border border-secondary text-nowrap"></span>
+							{{ 'at'|trans }}
+							<span id="eventInfo_startHour" class="fw-bold small bg-white px-2 py-1 rounded border border-secondary"></span>
+							{{ 'and will last'|trans }}
+							<span id="eventInfo_duration" class="fst-italic"></span>
+						</p>
+					</div>
+					<div class="d-flex mt-2 px-2 justify-content-end d-none evtinfo-p">
+						<button type="button" class="btn btn-sm btn-outline-primary" id="editEvent">
 							{{ 'Edit'|trans }}
 							<i class="bi bi-pencil-square"></i>
 						</button>
-						<button type="button" class="btn w-50 btn-sm btn-danger" id="deleteEvent">
-							{{ 'Delete'|trans }}
+						<button type="button" class="btn ms-2 btn-sm btn-danger" id="deleteEvent">
+							<span class="d-none d-lg-inline">{{ 'Delete'|trans }}</span>
 							<i class="bi bi-trash"></i>
 						</button>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="toast-container top-0 start-50 translate-middle-x">
-		<div class="toast align-items-center border-0 mt-3" role="alert" aria-live="assertive" aria-atomic="true">
-			<div class="d-flex">
-				<div class="toast-body"></div>
-				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		<div class="toast-container top-0 start-50 translate-middle-x">
+			<div class="toast align-items-center border-0 mt-3" role="alert" aria-live="assertive" aria-atomic="true">
+				<div class="d-flex">
+					<div class="toast-body"></div>
+					<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+				</div>
 			</div>
 		</div>
-	</div>
-{% endblock %}
+	{% endblock %}
 
 
-{% block scripts %}
-	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.js" integrity="sha256-cbWu30RZ0VQ5sBdqcxYa3S3nA+E1d/tkUcflycLQZ50=" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/locales/{{ locale }}.js" integrity="sha256-tA2XdsRejAQMBFRuYc++BwRvojoPiI3N6gadEzNdIno=" crossorigin="anonymous"></script>
-	<script src="{{ asset('js/main.js') }}"></script>
+	{% block scripts %}
+		<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.js" integrity="sha256-cbWu30RZ0VQ5sBdqcxYa3S3nA+E1d/tkUcflycLQZ50=" crossorigin="anonymous"></script>
+		{% if locale == 'fr' %}
+			<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/locales/{{ locale }}.js" integrity="sha256-tA2XdsRejAQMBFRuYc++BwRvojoPiI3N6gadEzNdIno=" crossorigin="anonymous"></script>
+		{% endif %}
+		<script src="{{ asset('js/main.js') }}"></script>
 
-	{% set calendarEvents = [] %}
-	{% for event in events %}
-		{% set calendarEvents = calendarEvents|merge([event.toFullCalendarJsArray()]) %}
-	{% endfor %}
-	<script>
-		document.addEventListener('DOMContentLoaded', loadCalendar({{ calendarEvents|json_encode|raw }}));
-	</script>
-{% endblock %}
+		{% set calendarEvents = [] %}
+		{% for event in events %}
+			{% set calendarEvents = calendarEvents|merge([event.toFullCalendarJsArray()]) %}
+		{% endfor %}
+		<script>
+			document.addEventListener('DOMContentLoaded', loadCalendar({{ calendarEvents|json_encode|raw }}));
+		</script>
+	{% endblock %}

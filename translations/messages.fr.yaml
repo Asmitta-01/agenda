@@ -1,0 +1,44 @@
+Calendar: Calendrier
+Logout: 'Se déconnecter'
+'Day view': 'Vue Jour'
+'Week view': 'Vue Hebdo'
+'Month view': 'Vue Mensuelle'
+Events: Événements
+'New event': 'Nouvel évènement'
+'Add new event': 'Ajouter nouvel évènement'
+'This event begin on the': 'Cet événement commence le'
+at: à
+'and will last': 'et durera'
+Edit: Modifier
+Delete: Supprimer
+'- Agenda by Asmitta-01': '- Agenda par Asmitta-01'
+' - Agenda by Asmitta-01': ' - Agenda par Asmitta-01'
+'Welcome on Agenda by Asmitta-01': 'Bienvenue sur Agenda par Asmitta-01'
+'Signing Up': 'Inscription'
+'Create your account and start using your agenda': 'Créez votre compte et commencez à utiliser votre agenda'
+Gender: Genre
+'Already have an account ?': 'Déjà un compte ?'
+Login: 'Connectez-vous'
+'Welcome to Agenda': 'Bienvenue dans Agenda'
+by: par
+'Login to manage your agenda': 'Connectez-vous pour gérer votre agenda'
+'Email address': 'Adresse e-mail'
+Password: 'Mot de passe'
+"You don't have an account ?": "Vous n'avez pas de compte ?"
+'Sign up': "S'inscrire"
+'Sign in': "S'identifier"
+Title: Titre
+Description: Description
+'Start hour': 'Heure de début'
+Year: Année
+Month: Mois
+Day: Jour
+Days: Jours
+Hour: Heure
+Hours: Heures
+Minute: Minute
+Duration: Durée
+Category: Catégorie
+Save: Enregistrer
+'Launched on': 'Launched on'
+'You are going to be logged out. Continue ?': 'Vous allez etre déconnecté. Continuer ?'

@@ -1,4 +1,7 @@
 
+const _url = document.forms.namedItem('event').getAttribute('action');
+var url = _url;
+
 var calendar;
 const evtInfo = document.getElementById('eventInfo').innerHTML;
 function loadCalendar(events) {
@@ -55,13 +58,17 @@ function loadCalendar(events) {
             const request = new XMLHttpRequest();
             request.onload = function () {
                 document.getElementById('eventInfo').innerHTML = evtInfo;
+                document.querySelectorAll('.evtinfo-p').forEach((elt) => {
+                    if (elt.classList.contains('d-none'))
+                        elt.classList.remove('d-none')
+                })
 
                 if (request.status == 200) {
                     var data = JSON.parse(request.response);
                     Object.entries(data).forEach(([key, value]) => {
                         document.getElementById(`eventInfo_${key}`).innerHTML = value;
                     })
-                    document.getElementById('eventInfo_category').classList.add('text-bg-success');
+                    document.getElementById('eventInfo_category').className = `p-2 rounded bg-opacity-100 ${data.className}`;
                 } else {
                     console.log(`Error: ${request.status}`, request.responseText);
                     newToast('Couldn\' load this event', 'danger');
@@ -92,16 +99,96 @@ document.forms.namedItem('event').addEventListener('submit', function (e) {
 
         if (request.status == 200) {
             if (calendar instanceof FullCalendar.Calendar) {
-                calendar.addEvent(JSON.parse(request.response));
-                newToast('The new event has been added', 'success');
+                const data = JSON.parse(request.response);
+                if (url.includes('save')) {
+                    calendar.addEvent(data);
+                    newToast('The new event has been added', 'success');
+                }
+                else if (url.includes('update')) {
+                    var id = document.getElementById('eventInfo_id').textContent;
+                    var evt = calendar.getEventById(id);
+                    Object.entries(data).forEach(([key, value]) => {
+                        if (key == 'start')
+                            evt.setStart(value);
+                        else if (key = 'end')
+                            evt.setEnd(value);
+                        else
+                            evt.setProp(key, value);
+                    })
+                    newToast('Successfully updated the event', 'success');
+                }
             }
         } else {
-            console.log(`Error: ${request.status} : ${request.responseText}`);
+            console.log(`Error: ${request.status} : ${request.response}`);
             newToast('An error occurs, failure', 'danger');
         }
     }
-    request.open("POST", "/event/save");
+    request.open("POST", url);
     request.send(formData);
+});
+
+document.getElementById('deleteEvent').addEventListener('click', function (e) {
+    if (confirm('Are you sure you want to delete this event ? ')) {
+        var id = document.getElementById('eventInfo_id').textContent;
+        const deleteText = e.currentTarget.innerHTML;
+        e.currentTarget.innerHTML = '<span class="spinner-grow spinner-grow-sm mx-2"></span>';
+
+        const request = new XMLHttpRequest();
+        request.onload = function () {
+            document.getElementById('eventInfo').innerHTML = evtInfo;
+            document.getElementById('deleteEvent').innerHTML = deleteText;
+            document.querySelectorAll('.evtinfo-p').forEach((elt) => {
+                if (!elt.classList.contains('d-none'))
+                    elt.classList.add('d-none')
+            })
+
+            if (request.status == 200) {
+                if (calendar instanceof FullCalendar.Calendar) {
+                    var evt = calendar.getEventById(id);
+                    evt.remove();
+                    newToast('The event has been deleted', 'info');
+                }
+            } else {
+                console.log(`Error: ${request.status} : ${request.responseText}`);
+                newToast('An error occurs while trying to delete the event', 'danger');
+            }
+        }
+        request.open("POST", `/event/delete/${id}`);
+        request.send();
+    }
+});
+
+document.getElementById('editEvent').addEventListener('click', function (e) {
+    var id = document.getElementById('eventInfo_id').textContent;
+    if (calendar instanceof FullCalendar.Calendar) {
+        var evt = calendar.getEventById(id);
+    }
+
+    if (typeof evt != 'undefined') {
+        document.getElementById('event_title').value = evt.title;
+        document.getElementById('event_description').value = document.getElementById('eventInfo_description').textContent;
+        document.getElementById('event_launchedOn_month').value = evt.start.getMonth() + 1;
+        document.getElementById('event_launchedOn_day').value = evt.start.getDate();
+        document.getElementById('event_launchedOn_year').value = evt.start.getFullYear();
+        document.getElementById('event_startHour_hour').value = evt.start.getHours();
+        document.getElementById('event_startHour_minute').value = evt.start.getMinutes();
+        document.getElementById('event_duration_days').value = ((evt.end - evt.start) / (1000 * 3600 * 24)).toFixed();
+        document.getElementById('event_duration_hours').value = (((evt.end - evt.start) / (1000 * 3600) % 24)).toFixed();
+        for (let index = 0; index < document.getElementById('event_category').length; index++) {
+            var opt = document.getElementById('event_category').options[index];
+            if (opt.textContent == document.getElementById('eventInfo_category').textContent)
+                document.getElementById('event_category').value = index + 1;
+        }
+
+        url = `/event/update/${id}`;
+        var el = bootstrap.Offcanvas.getOrCreateInstance('#eventForm');
+        el.show();
+
+        document.getElementById('eventForm').addEventListener('hidden.bs.offcanvas', function () {
+            url = _url;
+            document.forms.namedItem('event').reset();
+        });
+    }
 });
 
 

@@ -7,6 +7,7 @@ Events: Events
 'New event': 'New event'
 'Add new event': 'Add new event'
 '- Agenda by Asmitta-01': '- Agenda by Asmitta-01'
+' - Agenda by Asmitta-01': ' - Agenda by Asmitta-01'
 'Welcome on Agenda by Asmitta-01': 'Welcome on Agenda by Asmitta-01'
 'Signing Up': 'Signing Up'
 'Create your account and start using your agenda': 'Create your account and start using your agenda'
@@ -21,3 +22,24 @@ Password: Password
 "You don't have an account ?": "You don't have an account ?"
 'Sign up': 'Sign up'
 'Sign in': 'Sign in'
+Logout: Logout
+'This event begin on the': 'This event begin on the'
+at: at
+'and will last': 'and will last'
+Edit: Edit
+Delete: Delete
+Title: Title
+Description: Description
+'Start hour': 'Start hour'
+Year: Year
+Month: Month
+Day: Day
+Days: Days
+Hour: Hour
+Hours: Hours
+Minute: Minute
+Duration: Duration
+Category: Category
+Save: Save
+'Launched on': 'Launched on'
+'You are going to be logged out. Continue ?': 'You are going to be logged out. Continue ?'

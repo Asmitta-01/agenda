@@ -40,8 +40,6 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('info', 'Welcome on Agenda, it is always a pleasure to see a new user');
-
             return $userAuthenticator->authenticateUser(
                 $user,
                 $authenticator,

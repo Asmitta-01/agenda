@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
 class AgendaController extends AbstractController
 {
@@ -40,5 +41,23 @@ class AgendaController extends AbstractController
             'events' => $agenda->getEvents(),
             'eventForm' => $form->createView()
         ]);
+    }
+
+    #[Route(
+        '{_locale}/switchlang',
+        name: 'app_switch_lang',
+        requirements: ['_locale' => 'en|fr'],
+        defaults: ['_locale' => 'en']
+    )]
+    public function switchLanguage($_locale, Request $request)
+    {
+        $replacement = $_locale == 'en' ? 'fr' : 'en';
+
+        // return $this->redirect(str_replace($_locale, $replacement, $request->server->get('HTTP_REFERER')));
+
+        // return $this->redirectToRoute('index', ['_locale' => $replacement]);
+
+        $url_parts = explode($_locale . '/', $request->server->get('HTTP_REFERER'));
+        return $this->redirect(implode($replacement . '/', $url_parts));
     }
 }

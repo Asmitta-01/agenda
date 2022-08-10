@@ -29,9 +29,6 @@ class Event
     #[ORM\Column(nullable: true)]
     private ?\DateInterval $duration = null;
 
-    #[ORM\Column]
-    private ?bool $repeatedly = null;
-
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Agenda $agenda = null;
@@ -105,18 +102,6 @@ class Event
         return $this;
     }
 
-    public function isRepeatedly(): ?bool
-    {
-        return $this->repeatedly;
-    }
-
-    public function setRepeatedly(bool $repeatedly): self
-    {
-        $this->repeatedly = $repeatedly;
-
-        return $this;
-    }
-
     public function getAgenda(): ?Agenda
     {
         return $this->agenda;
@@ -161,47 +146,48 @@ class Event
         if (!$this->title)
             return [];
 
+        switch ($this->category->getName()) {
+            case 'Birthday':
+                $class = ['text-bg-warning', 'border-warning'];
+                break;
+            case 'Wedding':
+                $class = ['text-bg-success', 'border-success'];
+                break;
+            case 'Meeting':
+                $class = ['text-bg-info', 'border-info'];
+                break;
+            case 'Conference':
+                $class = ['text-bg-primary', 'border-primary'];
+                break;
+            case 'Other':
+                $class = ['text-bg-secondary', 'border-secondary'];
+                break;
+            default:
+                $class = ['text-bg-dark', 'border-dark'];
+                break;
+        }
         if ($onlyFullCalendarProperties) {
-            switch ($this->category->getName()) {
-                case 'Birthday':
-                    $class = ['text-bg-warning', 'border-warning'];
-                    break;
-                case 'Wedding':
-                    $class = ['text-bg-success', 'border-success'];
-                    break;
-                case 'Meeting':
-                    $class = ['text-bg-info', 'border-info'];
-                    break;
-                case 'Conference':
-                    $class = ['text-bg-primary', 'border-primary'];
-                    break;
-                case 'Other':
-                    $class = ['text-bg-secondary', 'border-secondary'];
-                    break;
-                default:
-                    $class = ['text-bg-dark', 'border-dark'];
-                    break;
-            }
-
             $start = new \DateTime($this->launchedOn->format('Y-m-d') . ' ' . $this->startHour->format('H:i'));
             $end = $this->duration ? date_add($start, $this->duration) : $start;
 
             $array = [
                 'id' => $this->id,
                 'title' => $this->title,
-                'start' => $start->format('Y-m-d'),
+                'start' => $this->launchedOn->format('Y-m-d') . ' ' . $this->startHour->format('H:i'),
                 'end' => $end->format('Y-m-d H:i'),
                 'allDay' => $this->duration ? false : true,
                 'className' => $class
             ];
         } else {
             $array = [
+                'id' => $this->id,
                 'title' => $this->title,
                 'description' => $this->description,
                 'launchedOn' => $this->launchedOn->format('D d M Y'),
                 'startHour' => $this->startHour->format('H:i'),
-                'duration' => $this->duration ? $this->duration->h : null,
-                'category' => $this->category->getName()
+                'duration' => $this->duration ? $this->duration->format('%d day(s) %h hour(s)') : null,
+                'category' => $this->category->getName(),
+                'className' => $class[0]
             ];
         }
 

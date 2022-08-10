@@ -25,14 +25,16 @@ class EventController extends AbstractController
     }
 
     #[Route('/event/save', name: 'app_event_new', methods: ['POST'])]
-    public function saveEvent(Request $request, EntityManagerInterface $entityManager)
+    #[Route('/event/update/{id}', name: 'app_event_update', methods: ['POST'])]
+    public function saveEvent(Request $request, EntityManagerInterface $entityManager, Event $event = null)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         /** @var User $user */
         $user = $this->getUser();
 
-        $event = new Event;
+        if ($event == null)
+            $event = new Event;
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
@@ -45,11 +47,10 @@ class EventController extends AbstractController
             // return $this->json(json_encode($event->toFullCalendarJsArray()));
             header("Content-Type: application/json");
             echo json_encode($event->toFullCalendarJsArray());
+            exit();
         }
 
-        // return $this->json(json_encode('Bad request'), 400);
-        // echo json_encode($event->toFullCalendarJsArray());
-        exit();
+        return $this->json(json_encode(["Invalid data" => $form->getErrors()]), 400);
     }
 
     #[Route('/event/delete/{id}', name: 'app_event_delete', methods: ['POST'])]
@@ -59,6 +60,7 @@ class EventController extends AbstractController
 
         if ($event) {
             $entityManager->remove($event);
+            $entityManager->flush();
             echo json_encode('Successfully delete event');
             exit();
         }
