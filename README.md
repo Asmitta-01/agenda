@@ -1,3 +1,5 @@
+*Lire en [français](README.fr.md)*
+
 # About
 This application implements a simple agenda with these funtionnalities:
  - Consult the agenda

@@ -191,8 +191,21 @@ document.getElementById('editEvent').addEventListener('click', function (e) {
     }
 });
 
-
+var lang = document.querySelector('html').getAttribute('lang');
+if (lang == 'fr') {
+    var translatedToFr = {
+        'Couldn\' load this event': "Impossible de charger cet événement",
+        'The new event has been added': 'Le nouvel événement a été ajouté',
+        'Successfully updated the event': "Mise à jour de l'événement avec succès",
+        'An error occurs, failure': 'Une erreur s\'est produite, échec',
+        'The event has been deleted': 'L\'événement a été supprimé',
+        'An error occurs while trying to delete the event': "Une erreur s'est produite en essayant de supprimer l'événement"
+    }
+}
 function newToast(message, _class = 'primary') {
+    if (lang == 'fr' && typeof translatedToFr != 'undefined') {
+        message = translatedToFr[message];
+    }
     document.querySelector('.toast-body').innerHTML = message;
     const toastEl = document.querySelector('.toast');
     toastEl.classList.forEach((cls) => {
